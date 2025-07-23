@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 
 export default function Login(){
@@ -25,15 +25,17 @@ export default function Login(){
 
             const result = await response.json();
             if(!response.ok) {
-                setLoginResult(result.message)
-
+                setIsSuccess(false)
                 setTimeout(()=>{
                     setIsSuccess(true)
                 }, 3000)
-                setIsSuccess(false)
+                setLoginResult(result.message)
             };
 
-            if(response.ok) navigate('/')
+            if(response.ok) {
+                localStorage.setItem('token', JSON.stringify(result.token))
+                navigate('/')
+            }
 
         }catch(error){
             console.error(error);

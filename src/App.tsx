@@ -5,6 +5,7 @@ import Register from './components/Register'
 import { createContext, useState } from 'react'
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
 import type { Task } from './model'
+import { loader as layLoutLoader } from './components/Layout'
 
 type TaskContextType = {
     tasks: Task[],
@@ -22,7 +23,7 @@ export default function App(){
 
   const router = createBrowserRouter(createRoutesFromElements(
     <>
-      <Route path='/' element={<Layout />}>
+      <Route path='/' element={<Layout />} loader={layLoutLoader}>
         <Route index element={<Main />}/>
       </Route>
       
