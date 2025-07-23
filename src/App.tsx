@@ -1,6 +1,7 @@
 import Layout from './components/Layout'
 import Main from './components/Main'
 import Login from './components/Login'
+import Register from './components/Register'
 import { createContext, useState } from 'react'
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
 import type { Task } from './model'
@@ -26,6 +27,7 @@ export default function App(){
       </Route>
       
       <Route path='/login' element={<Login />}/>
+      <Route path='/register' element={<Register />}/>
     </>
   ))
 
