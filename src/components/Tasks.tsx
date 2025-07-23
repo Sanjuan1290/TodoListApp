@@ -2,13 +2,15 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { taskContext } from "../App";
 
+import EditTask from "./EditTask";
 
 export default function Tasks(){
 
     const { tasks } = useContext(taskContext)
+    const [ isTaskEditable, setIsTaskEditable] = useState(false)
 
     return(
         <>
@@ -18,7 +20,7 @@ export default function Tasks(){
                 <button className="transition-colors duration-300 ease-in-out hover:bg-gray-500 hover:text-gray-200 bg-gray-100 px-3 py-1 rounded-[3px] font-bold">Completed</button>
             </div>
 
-            <div className="flex flex-col-reverse gap-3">
+            <div className="relative flex flex-col-reverse gap-3">
                 {
                     tasks.map((task, index) => (
                         <div key={index} className="bg-[rgb(30,40,56)] flex gap-2 px-3 py-4 items-start rounded-md">
@@ -39,12 +41,16 @@ export default function Tasks(){
                             </div>
 
                             <div className="flex gap-3 text-white mt-[2px]">
-                                <MdOutlineModeEdit className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                                <MdOutlineModeEdit onClick={()=>{setIsTaskEditable(true)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                                 <RiDeleteBin5Fill className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                             </div>
 
                         </div>
                     ))
+                }
+
+                {
+                    isTaskEditable ? <EditTask  setIsTaskEditable={setIsTaskEditable}/> : ''
                 }
             </div>
 
