@@ -1,5 +1,6 @@
 import Header from './components/Header'
 import AddTask from './components/AddTask'
+import TaskOverview from './components/TaskOverview'
 
 export default function App(){
 
@@ -9,6 +10,7 @@ export default function App(){
 
       <main className='flex flex-col px-[160px] mt-[30px] gap-6'>
         <AddTask />
+        <TaskOverview />
       </main>
     </>
   )
