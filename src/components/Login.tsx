@@ -7,6 +7,10 @@ export default function Login(){
     const [loginResult, setLoginResult] = useState('')
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        localStorage.removeItem('token')
+    }, [])
+
     async function login(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
 
