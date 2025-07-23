@@ -1,5 +1,6 @@
 import Layout from './components/Layout'
 import Main from './components/Main'
+import Login from './components/Login'
 import { createContext, useState } from 'react'
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
 import type { Task } from './model'
@@ -19,9 +20,13 @@ export default function App(){
   const [tasks, setTasks] = useState<Task[]>([])
 
   const router = createBrowserRouter(createRoutesFromElements(
-    <Route path='/' element={<Layout />}>
-      <Route index element={<Main />}/>
-    </Route>
+    <>
+      <Route path='/' element={<Layout />}>
+        <Route index element={<Main />}/>
+      </Route>
+      
+      <Route path='/login' element={<Login />}/>
+    </>
   ))
 
   return(
