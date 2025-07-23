@@ -1,9 +1,7 @@
-import Header from './components/Header'
-import AddTask from './components/AddTask'
-import TaskOverview from './components/TaskOverview'
-import Tasks from './components/Tasks'
+import Layout from './components/Layout'
+import Main from './components/Main'
 import { createContext, useState } from 'react'
-
+import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
 import type { Task } from './model'
 
 type TaskContextType = {
@@ -17,18 +15,18 @@ export const taskContext = createContext<TaskContextType>({
 })
 
 export default function App(){
-
+  
   const [tasks, setTasks] = useState<Task[]>([])
+
+  const router = createBrowserRouter(createRoutesFromElements(
+    <Route path='/' element={<Layout />}>
+      <Route index element={<Main />}/>
+    </Route>
+  ))
 
   return(
     <taskContext.Provider value={{tasks, setTasks}}>
-      <Header />
-
-      <main className='flex flex-col px-[160px] mt-[30px] gap-6'>
-        <AddTask />
-        <TaskOverview />
-        <Tasks />
-      </main>
+      <RouterProvider router={router}/>
     </taskContext.Provider>
   )
 }
