@@ -13,7 +13,15 @@ export async function loader(){
         },
     })
 
-    if (!res.ok) return redirect('/login')
+    const result = await res.json()
+
+    if(!res.ok){
+        console.error(result.message);
+    }
+
+    console.log(result.tasks);
+
+    // if (!res.ok) return redirect('/login')
     return null
 }
 
