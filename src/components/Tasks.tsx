@@ -5,12 +5,38 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useContext, useState } from "react";
 import { taskContext } from "../App";
 
+
+import type { Task } from "../model";
 import EditTask from "./EditTask";
 
 export default function Tasks(){
 
-    const { tasks } = useContext(taskContext)
+    const { tasks, setTasks } = useContext(taskContext)
     const [ isTaskEditable, setIsTaskEditable] = useState(false)
+
+    async function deleteTask(taskId: string){
+        const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
+
+        const response = await fetch('http://localhost:3000/api/v1/deleteOneTask', {
+            method: 'DELETE',
+            headers: {
+                authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ taskId })
+        })
+
+        const result = await response.json()
+
+        if(!response.ok){
+            console.error(result.message);
+            return
+        }
+
+        setTasks(result.tasks.map((task: Task) => ({ ...task,  dueDate: new Date(task.dueDate)})))
+
+        console.log(result.tasks);
+    }
 
     return(
         <>
@@ -42,7 +68,7 @@ export default function Tasks(){
 
                             <div className="flex gap-3 text-white mt-[2px]">
                                 <MdOutlineModeEdit onClick={()=>{setIsTaskEditable(true)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
-                                <RiDeleteBin5Fill className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                                <RiDeleteBin5Fill onClick={()=>{deleteTask(task._id as string)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                             </div>
 
                         </div>

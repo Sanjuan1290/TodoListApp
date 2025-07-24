@@ -30,7 +30,6 @@ export default function CreateTask({ setToggle } : Props){
             return
         }
 
-        console.log(title, description, priority, dueDate, status);
         setToggle(false)
         setTasks(prev => [
         ...prev,

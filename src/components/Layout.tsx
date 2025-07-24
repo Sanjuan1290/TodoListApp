@@ -22,8 +22,6 @@ export async function loader(){
         console.error(result.message);
     }
 
-    console.log(result.tasks);
-
     if (!res.ok) return redirect('/login')
     return { tasks: result.tasks.map((task: Task) => ({...task, dueDate: new Date(task.dueDate)})) }
 }
@@ -35,7 +33,7 @@ export default function Layout(){
 
     useEffect(() => {
         setTasks(tasks)
-    }, [setTasks, tasks])
+    }, [])
 
 
     return(
