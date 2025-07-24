@@ -43,6 +43,32 @@ export default function CreateTask({ setToggle } : Props){
             }
         ])
 
+        createTask_Server(title, description, priority, dueDate, status)
+    }
+
+    async function createTask_Server(title: string, 
+                                    description: string, 
+                                    priority: string, 
+                                    dueDate: string, 
+                                    status: string){
+
+        const token = JSON.parse(localStorage.getItem('token') as string )
+
+        const response = await fetch('http://localhost:3000/api/v1/addTask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ title, description, priority, dueDate, status })
+        })
+
+        const result = await response.json()
+        
+        if(!response.ok) {
+            console.log(result.message);
+            return
+        }
     }
 
     return(

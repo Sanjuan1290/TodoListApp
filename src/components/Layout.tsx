@@ -1,5 +1,8 @@
-import { Outlet, redirect } from "react-router-dom"
+import { Outlet, redirect, useLoaderData } from "react-router-dom"
+import { useContext, useEffect } from "react"
 import Header from './Header'
+import { taskContext } from "../App"
+import type { Task } from "../model"
 
 export async function loader(){
     const savedToken = localStorage.getItem('token') || JSON.stringify('')
@@ -21,11 +24,19 @@ export async function loader(){
 
     console.log(result.tasks);
 
-    // if (!res.ok) return redirect('/login')
-    return null
+    if (!res.ok) return redirect('/login')
+    return { tasks: result.tasks.map((task: Task) => ({...task, dueDate: new Date(task.dueDate)})) }
 }
 
 export default function Layout(){
+
+    const { setTasks } = useContext(taskContext)
+    const { tasks } = useLoaderData() as { tasks: Task[] }
+
+    useEffect(() => {
+        setTasks(tasks)
+    }, [setTasks, tasks])
+
 
     return(
 
