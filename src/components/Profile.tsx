@@ -30,6 +30,7 @@ export async function loader(){
 export default function Profile(){
     const { userProfile, token } = useLoaderData() as { userProfile: Promise<UserProfile>, token: string }
     const [ name, setName ] = useState('')
+    const [failedMessage, setFailedMessage] = useState('')
 
     const nameRef = useRef<HTMLInputElement>(null)
     const currentPassRef = useRef<HTMLInputElement>(null)
@@ -62,6 +63,10 @@ export default function Profile(){
         console.log(result);
         if(!response.ok) {
             console.log(result.message);
+            setFailedMessage(result.message)
+            setTimeout(()=>{
+                setFailedMessage('')
+            }, 3000)
             return
         }
 
@@ -107,7 +112,10 @@ export default function Profile(){
                                 <input type="password" autoComplete='current-password' ref={confirmNewPassRef} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
-                            <div className="text-right">
+                            <div className="flex justify-between items-center">
+                                {
+                                    failedMessage !== '' ? <h1 className='text-red-400 text-[14px]'>{failedMessage}</h1> : <h1></h1>
+                                }
                                 <button className="bg-[rgb(74,62,183)] px-3 py-2 text-[13px] text-gray-200 font-bold cursor-pointer transition-colors duration-200 ease-in-out hover:bg-[rgb(124,111,242)] hover:text-gray-700">Save Changes</button>
                             </div>
                         </form>
