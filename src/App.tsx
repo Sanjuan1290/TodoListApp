@@ -7,6 +7,7 @@ import { createContext, useState } from 'react'
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
 import type { Task } from './model'
 import { loader as layLoutLoader } from './components/Layout'
+import { loader as profileLoader} from './components/Profile'
 
 type TaskContextType = {
     tasks: Task[],
@@ -26,7 +27,7 @@ export default function App(){
     <>
       <Route path='/' element={<Layout />} loader={layLoutLoader}>
         <Route index element={<Main />}/>
-        <Route path='/profile' element={<Profile />}/>
+        <Route path='/profile' element={<Profile />} loader={profileLoader}/>
       </Route>
       
       <Route path='/login' element={<Login />}/>
