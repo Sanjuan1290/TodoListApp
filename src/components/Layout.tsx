@@ -1,5 +1,5 @@
 import { Outlet, redirect, useLoaderData } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import Header from './Header'
 import { taskContext } from "../App"
 import type { Task } from "../model"
