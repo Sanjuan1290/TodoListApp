@@ -35,6 +35,16 @@ export default function EditTask({ setIsTaskEditable, task, setTask } : Props){
         })
         const result = await response.json()
 
+        if (!response.ok) {
+            console.error(result.message)
+            return
+        }
+        
+        if (!result.tasks || !Array.isArray(result.tasks)) {
+            console.error('Invalid tasks data')
+            return
+        }
+
         setTasks(result.tasks.map((task: Task) => ({...task, dueDate: new Date(task.dueDate)})))
         setIsTaskEditable(false)
     }

@@ -25,7 +25,7 @@ export default function TaskOverview(){
     }
 
     return(
-        <div className="flex justify-between gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
 
             <div className="flex gap-2 items-center py-4 px-3 rounded-md bg-[rgb(30,40,56)] flex-1 text-white font-bold">
                 <TbCalendarDue className="text-yellow-500 w-5 h-5"/>

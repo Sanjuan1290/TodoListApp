@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { taskContext } from "../App";
 
@@ -15,6 +15,8 @@ export default function CreateTask({ setToggle } : Props){
     const dueDateRef = useRef<HTMLInputElement>(null)
     const statusRef = useRef<HTMLSelectElement>(null)
     const { setTasks } = useContext(taskContext)
+    const [failedMessage, setFailedMessage] = useState('')
+
 
     function createTask(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
@@ -26,7 +28,10 @@ export default function CreateTask({ setToggle } : Props){
         const status = statusRef.current ? statusRef.current.value : ''
 
         if(!title || !description || !priority || !dueDate || !status) {
-            console.error('Please fill the fields');
+            setFailedMessage('Please fill the fields');
+            setTimeout(()=>{
+                setFailedMessage('')
+            }, 3000)
             return
         }
 
@@ -65,7 +70,10 @@ export default function CreateTask({ setToggle } : Props){
         const result = await response.json()
         
         if(!response.ok) {
-            console.log(result.message);
+            setFailedMessage(result.message);
+            setTimeout(()=>{
+                setFailedMessage('')
+            }, 3000)
             return
         }
     }
@@ -113,7 +121,10 @@ export default function CreateTask({ setToggle } : Props){
                     </select>
                 </label>
 
-                <div className="text-end">
+                <div className="flex justify-between">
+                    {
+                        failedMessage !== '' ? <h1 className="text-red-400">{failedMessage}</h1> : <h1></h1>
+                    }
                     <button className="text-[12px] px-3 py-1.5 rounded-[3px] bg-[rgb(78,59,245)] transition-colors duration-300 ease-in-out hover:bg-[rgb(196,189,255)] hover:text-gray-900">Create Task</button>
                 </div>
             </div>
