@@ -19,7 +19,7 @@ export default function Tasks(){
     async function deleteTask(taskId: string){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
 
-        const response = await fetch('http://localhost:3000/api/v1/deleteOneTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/deleteOneTask', {
             method: 'DELETE',
             headers: {
                 authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ export default function Tasks(){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
         const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending' 
         
-        const response = await fetch('http://localhost:3000/api/v1/toggleTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/toggleTask', {
             method: 'PATCH',
             headers: {
                 authorization: `Bearer ${token}`,

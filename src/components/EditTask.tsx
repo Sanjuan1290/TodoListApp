@@ -25,7 +25,7 @@ export default function EditTask({ setIsTaskEditable, task, setTask } : Props){
 
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
         
-        const response = await fetch('http://localhost:3000/api/v1/editTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/editTask', {
             method: 'PATCH',
             headers: {
                 authorization: `Bearer ${token}`,

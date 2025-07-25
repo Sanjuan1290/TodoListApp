@@ -58,7 +58,7 @@ export default function CreateTask({ setToggle } : Props){
 
         const token = JSON.parse(localStorage.getItem('token') as string )
 
-        const response = await fetch('http://localhost:3000/api/v1/addTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/addTask', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
