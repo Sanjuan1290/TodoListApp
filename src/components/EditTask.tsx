@@ -1,11 +1,16 @@
-import { useRef } from "react"
+import { useContext, useRef } from "react"
 import { IoMdClose } from "react-icons/io";
+import type { Task } from "../model";
+import { taskContext } from "../App";
 
 type Props = {
-    setIsTaskEditable: React.Dispatch<React.SetStateAction<boolean>>
+    setIsTaskEditable: React.Dispatch<React.SetStateAction<boolean>>,
+    task: Task,
+    setTask: React.Dispatch<React.SetStateAction<Task>>
 }
 
-export default function EditTask({ setIsTaskEditable } : Props){
+export default function EditTask({ setIsTaskEditable, task, setTask } : Props){
+    const {setTasks} = useContext(taskContext)
 
     const titleRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
@@ -13,9 +18,24 @@ export default function EditTask({ setIsTaskEditable } : Props){
     const dueDateRef = useRef<HTMLInputElement>(null)
     const statusRef = useRef<HTMLSelectElement>(null)
 
-    function updateTask(e: React.FormEvent<HTMLFormElement>){
+    const formatDate = (date: Date) => date.toISOString().split("T")[0]; 
+
+    async function updateTask(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
 
+        const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
+        
+        const response = await fetch('http://localhost:3000/api/v1/editTask', {
+            method: 'PATCH',
+            headers: {
+                authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+        const result = await response.json()
+
+        setTasks(result.tasks.map((task: Task) => ({...task, dueDate: new Date(task.dueDate)})))
         setIsTaskEditable(false)
     }
 
@@ -30,17 +50,19 @@ export default function EditTask({ setIsTaskEditable } : Props){
             <div className="flex flex-col gap-4">
                 <label>
                     <p className="text-[11px] tracking-wider font-bold">Title</p>
-                    <input ref={titleRef} type="text" className="text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]" />
+                    <input ref={titleRef} type="text" value={task.title} onChange={()=>{setTask(prev => ({...prev, title: titleRef.current!.value}))}} className="text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]" />
                 </label>
 
                 <label>
                     <p className="text-[11px] tracking-wider font-bold">Description</p>
-                    <textarea ref={descriptionRef} className="text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]" />
+                    <textarea ref={descriptionRef} value={task.description} 
+                    onChange={()=>{setTask(prev => ({...prev, description: descriptionRef.current!.value}))}} className="text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]" />
                 </label>
 
                 <label>
                     <p className="text-[11px] tracking-wider font-bold">Priority</p>
-                    <select ref={priorityRef} name="" id="" className="cursor-pointer text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]">
+                    <select ref={priorityRef} name="" id="" value={task.priority} 
+                    onChange={()=>{setTask(prev => ({...prev, priority: priorityRef.current!.value as 'Low' | 'High'}))}} className="cursor-pointer text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]">
                         <option value="Low" className="text-black">Low</option>
                         <option value="High" className="text-black">High</option>
                     </select>
@@ -48,15 +70,16 @@ export default function EditTask({ setIsTaskEditable } : Props){
 
                 <label>
                     <p className="text-[11px] tracking-wider font-bold">Due Date</p>
-                    <input ref={dueDateRef} type="date"
+                    <input ref={dueDateRef} value={formatDate(task.dueDate)} type="date"
                         onKeyDown={(e) => e.preventDefault()}
                         onPaste={(e) => e.preventDefault()}
+                        onChange={()=>{(setTask(prev => ({...prev, dueDate: new Date(dueDateRef.current!.value)})))}}
                         className=" text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]"/>
                 </label>
 
                 <label>
                     <p className="text-[11px] tracking-wider font-bold">Status</p>
-                    <select ref={statusRef} name="" id="" className="cursor-pointer text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]">
+                    <select ref={statusRef} name="" id="" value={task.status} onChange={()=>{setTask(prev => ({...prev, status: statusRef.current!.value as "Pending" | "Completed"}))}} className="cursor-pointer text-[12px] px-2 py-1 tracking-wide border border-gray-400 rounded-[3px] bg-transparent w-[400px]">
                         <option value="Pending" className="text-black">Pending</option>
                         <option value="Completed" className="text-black">Completed</option>
                     </select>

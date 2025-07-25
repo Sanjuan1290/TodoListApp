@@ -13,6 +13,7 @@ export default function Tasks(){
 
     const { tasks, setTasks } = useContext(taskContext)
     const [ isTaskEditable, setIsTaskEditable] = useState(false)
+    const [task, setTask] = useState({} as Task)
 
     async function deleteTask(taskId: string){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
@@ -34,8 +35,13 @@ export default function Tasks(){
         }
 
         setTasks(result.tasks.map((task: Task) => ({ ...task,  dueDate: new Date(task.dueDate)})))
+    }
 
-        console.log(result.tasks);
+
+    async function editTask(userTask: Task){
+        //display edittableTask
+        setIsTaskEditable(true)
+        setTask(userTask)
     }
 
     return(
@@ -67,7 +73,7 @@ export default function Tasks(){
                             </div>
 
                             <div className="flex gap-3 text-white mt-[2px]">
-                                <MdOutlineModeEdit onClick={()=>{setIsTaskEditable(true)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                                <MdOutlineModeEdit onClick={()=>{editTask(task)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                                 <RiDeleteBin5Fill onClick={()=>{deleteTask(task._id as string)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                             </div>
 
@@ -76,7 +82,7 @@ export default function Tasks(){
                 }
 
                 {
-                    isTaskEditable ? <EditTask  setIsTaskEditable={setIsTaskEditable}/> : ''
+                    isTaskEditable ? <EditTask  setIsTaskEditable={setIsTaskEditable} task={task} setTask={setTask}/> : ''
                 }
             </div>
 
