@@ -10,7 +10,7 @@ export async function loader(){
 
     const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
 
-    const response = await fetch('https://todolistapp-server-hocs.onrender.com/getProfile', {
+    const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/getProfile', {
         headers: {
             authorization: `Bearer ${token}`
         }
@@ -44,7 +44,7 @@ export default function Profile(){
     async function editProfile(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
 
-        const response = await fetch('https://todolistapp-server-hocs.onrender.com/updateProfile', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/updateProfile', {
             method: 'PATCH',
             headers: {
                 authorization: `Bearer ${token}`,

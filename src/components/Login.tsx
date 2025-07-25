@@ -19,7 +19,7 @@ export default function Login(){
         const password = formData.get('password') as string
 
         try{
-            const response = await fetch('https://todolistapp-server-hocs.onrender.com/login', {
+            const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

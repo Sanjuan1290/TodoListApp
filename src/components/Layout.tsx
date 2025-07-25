@@ -10,7 +10,7 @@ export async function loader(){
 
     if (!token) return redirect('/login') 
 
-    const res = await fetch('https://todolistapp-server-hocs.onrender.com/verify', {
+    const res = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/verify', {
         headers: {
         Authorization: `Bearer ${token}`,
         },

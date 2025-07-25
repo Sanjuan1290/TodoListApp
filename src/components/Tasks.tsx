@@ -49,7 +49,7 @@ export default function Tasks(){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
         const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending' 
         
-        const response = await fetch('https://todolistapp-server-hocs.onrender.com/toggleTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/toggleTask', {
             method: 'PATCH',
             headers: {
                 authorization: `Bearer ${token}`,

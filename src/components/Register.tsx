@@ -51,7 +51,7 @@ export default function Register(){
             return
         }
 
-        const response = await fetch('https://todolistapp-server-hocs.onrender.com/register', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
