@@ -11,7 +11,7 @@ import EditTask from "./EditTask";
 
 export default function Tasks(){
 
-    const { tasks, setTasks } = useContext(taskContext)
+    const { tasks, setTasks, toggleDarkMode } = useContext(taskContext)
     const [ isTaskEditable, setIsTaskEditable] = useState(false)
     const [task, setTask] = useState({} as Task)
     const [filter, setFilter] = useState('All')
@@ -67,9 +67,9 @@ export default function Tasks(){
     return(
         <>
             <div className="flex gap-2 text-gray-700 text-[13px]">
-                <button onClick={()=>{setFilter('All')}} className={`${filter === 'All' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>All</button>
-                <button onClick={()=>{setFilter('Pending')}} className={`${filter === 'Pending' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>Pending</button>
-                <button onClick={()=>{setFilter('Completed')}} className={`${filter === 'Completed' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>Completed</button>
+                <button onClick={()=>{setFilter('All')}} className={`${filter === 'All' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-300'}  px-3 py-2 rounded-[3px] font-bold`}>All</button>
+                <button onClick={()=>{setFilter('Pending')}} className={`${filter === 'Pending' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-300'}  px-3 py-2 rounded-[3px] font-bold`}>Pending</button>
+                <button onClick={()=>{setFilter('Completed')}} className={`${filter === 'Completed' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-300'}  px-3 py-2 rounded-[3px] font-bold`}>Completed</button>
             </div>
 
             <div className="relative flex flex-col-reverse gap-3">
@@ -77,26 +77,26 @@ export default function Tasks(){
                     tasks.map((task, index) => {
                         const status = task.status === filter || filter === 'All'
 
-                        return status && <div key={index} className="bg-[rgb(30,40,56)] flex gap-2 px-3 py-4 items-start rounded-md">
+                        return status && <div key={index} className={`${toggleDarkMode ? 'bg-[rgb(30,40,56)]' : 'bg-white'} shadow-sm shadow-gray-200 flex gap-2 px-3 py-4 items-start rounded-md`}>
 
-                            <IoMdCheckmarkCircleOutline onClick={()=>{toggleTask(task._id as string, task.status as 'Pending' | 'Completed')}} className={`${task.status === "Completed" ? 'text-green-600' : 'text-gray-300'} cursor-pointer w-[18px] h-[18px] mt-[2px]`}/>
+                            <IoMdCheckmarkCircleOutline onClick={()=>{toggleTask(task._id as string, task.status as 'Pending' | 'Completed')}} className={`${task.status === "Completed" ? 'text-green-600' : 'text-gray-500'} cursor-pointer w-[18px] h-[18px] mt-[2px]`}/>
 
                             <div className="flex flex-col gap-1 flex-1">
-                                <p className="text-gray-100 font-bold">{task.title}</p>
-                                <p className="text-gray-300 text-[14px]">{task.description}</p>
+                                <p className={`${toggleDarkMode ? 'text-gray-100' : 'text-black'} font-bold`}>{task.title}</p>
+                                <p className={`${toggleDarkMode ? 'text-gray-300' : 'text-black'} text-[14px]`}>{task.description}</p>
                                 
                                 <div className="flex items-center gap-3 text-[14px]">
                                     <p className={`${task.priority === 'Low' ? 'text-green-500' : 'text-red-400'} font-bold`}>{task.priority}</p>
                                     <div className="flex gap-1 items-center">
-                                        <FaRegClock className="text-blue-500 w-[17px] h-[17px] "/> 
-                                        <p className="text-gray-300">{task.dueDate.toLocaleDateString('en-GB')}</p>
+                                        <FaRegClock className="text-blue-500 w-[17px] h-[17px]"/> 
+                                        <p className={`${toggleDarkMode ? 'text-gray-300' : 'text-black'}`}>{task.dueDate.toLocaleDateString('en-GB')}</p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex gap-3 text-white mt-[2px]">
-                                <MdOutlineModeEdit onClick={()=>{editTask(task)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
-                                <RiDeleteBin5Fill onClick={()=>{deleteTask(task._id as string)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                                <MdOutlineModeEdit onClick={()=>{editTask(task)}} className={`cursor-pointer transition-colors duration-200 ease-in-out ${toggleDarkMode ? 'text-gray-100' : 'text-gray-800'} ${toggleDarkMode ? 'hover:text-gray-300' : 'hover:text-gray-700'}`}/>
+                                <RiDeleteBin5Fill onClick={()=>{deleteTask(task._id as string)}} className={`cursor-pointer transition-colors duration-200 ease-in-out text-red-500 hover:text-red-800`}/>
                             </div>
                         </div>
                     })

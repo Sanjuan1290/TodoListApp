@@ -1,27 +1,33 @@
 import { MdOutlineLightMode, MdLogout  } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { taskContext } from "../App";
 
 
 export default function Header(){
 
     const[showValidation, setShowValidation] = useState(false)
     const navigate = useNavigate()
+    const { toggleDarkMode, setToggleDarkMode } = useContext(taskContext)
 
     function logout(){
         // in Login.tsx I clear the localStorage for 'token'
         navigate('/login')
     }
 
+    useEffect(()=>{
+        document.body.style.backgroundColor = toggleDarkMode ? '#101828' : 'rgb(241,240,243)'
+    }, [toggleDarkMode])
+
     return(
-        <header className="flex items-center p-4 bg-[rgb(32,40,56)] text-white">
-            <NavLink to={'/'} className={'flex-1'}><h1 className="font-bold text-xl">TaskMaster</h1></NavLink>
+        <header className={`flex items-center p-4 ${toggleDarkMode ? 'bg-[rgb(32,40,56)]' : 'bg-[rgb(251,250,253)]'} text-white shadow-sm shadow-gray-400`}>
+            <NavLink to={'/'} className={'flex-1'}><h1 className={`font-bold text-xl transition-colors duration-200 ease-in-out ${toggleDarkMode ? '':'text-black hover:text-gray-600'} hover:text-gray-300`}>TaskMaster</h1></NavLink>
 
             <div className="flex gap-5">
-                <MdOutlineLightMode className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
-                <CgProfile onClick={()=>{navigate('/profile')}} className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
-                <MdLogout onClick={()=>{setShowValidation(true)}} className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                <MdOutlineLightMode onClick={()=>{setToggleDarkMode(prev => !prev)}} className={`w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out ${toggleDarkMode ? '':'text-black hover:text-gray-600'} hover:text-gray-300`}/>
+                <CgProfile onClick={()=>{navigate('/profile')}} className={`w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out ${toggleDarkMode ? '':'text-black hover:text-gray-600'} hover:text-gray-300`}/>
+                <MdLogout onClick={()=>{setShowValidation(true)}} className={`w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out ${toggleDarkMode ? '':'text-black hover:text-gray-600'} hover:text-gray-300`}/>
             </div>
             
             {

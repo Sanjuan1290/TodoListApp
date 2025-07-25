@@ -11,17 +11,23 @@ import { loader as profileLoader} from './components/Profile'
 
 type TaskContextType = {
     tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+    setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+    toggleDarkMode: boolean,
+    setToggleDarkMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const taskContext = createContext<TaskContextType>({
   tasks: [],
-  setTasks: () => {}
+  setTasks: () => {},
+  toggleDarkMode: false,
+  setToggleDarkMode: () => {}
 })
 
 export default function App(){
   
   const [tasks, setTasks] = useState<Task[]>([])
+  const [toggleDarkMode, setToggleDarkMode] = useState(true)
+  
 
   const router = createBrowserRouter(createRoutesFromElements(
     <>
@@ -36,7 +42,7 @@ export default function App(){
   ))
 
   return(
-    <taskContext.Provider value={{tasks, setTasks}}>
+    <taskContext.Provider value={{tasks, setTasks, toggleDarkMode, setToggleDarkMode}}>
       <RouterProvider router={router}/>
     </taskContext.Provider>
   )
