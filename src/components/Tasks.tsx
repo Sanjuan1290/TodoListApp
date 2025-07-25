@@ -19,7 +19,7 @@ export default function Tasks(){
     async function deleteTask(taskId: string){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
 
-        const response = await fetch('https://todolistapp-server-hocs.onrender.com/deleteOneTask', {
+        const response = await fetch('https://todolistapp-server-hocs.onrender.com/api/v1/deleteOneTask', {
             method: 'DELETE',
             headers: {
                 authorization: `Bearer ${token}`,
