@@ -14,6 +14,7 @@ export default function Tasks(){
     const { tasks, setTasks } = useContext(taskContext)
     const [ isTaskEditable, setIsTaskEditable] = useState(false)
     const [task, setTask] = useState({} as Task)
+    const [filter, setFilter] = useState('All')
 
     async function deleteTask(taskId: string){
         const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
@@ -47,15 +48,17 @@ export default function Tasks(){
     return(
         <>
             <div className="flex gap-2 text-gray-700 text-[13px]">
-                <button className="transition-colors duration-300 ease-in-out hover:bg-gray-500 hover:text-gray-200 bg-gray-100 px-3 py-1 rounded-[3px] font-bold">All</button>
-                <button className="transition-colors duration-300 ease-in-out hover:bg-gray-500 hover:text-gray-200 bg-gray-100 px-3 py-1 rounded-[3px] font-bold">Pending</button>
-                <button className="transition-colors duration-300 ease-in-out hover:bg-gray-500 hover:text-gray-200 bg-gray-100 px-3 py-1 rounded-[3px] font-bold">Completed</button>
+                <button onClick={()=>{setFilter('All')}} className={`${filter === 'All' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>All</button>
+                <button onClick={()=>{setFilter('Pending')}} className={`${filter === 'Pending' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>Pending</button>
+                <button onClick={()=>{setFilter('Completed')}} className={`${filter === 'Completed' ? 'bg-[rgb(78,58,244)] text-white' : 'bg-gray-100'}  px-3 py-1 rounded-[3px] font-bold`}>Completed</button>
             </div>
 
             <div className="relative flex flex-col-reverse gap-3">
                 {
-                    tasks.map((task, index) => (
-                        <div key={index} className="bg-[rgb(30,40,56)] flex gap-2 px-3 py-4 items-start rounded-md">
+                    tasks.map((task, index) => {
+                        const status = task.status === filter || filter === 'All'
+
+                        return status && <div key={index} className="bg-[rgb(30,40,56)] flex gap-2 px-3 py-4 items-start rounded-md">
 
                             <IoMdCheckmarkCircleOutline className="text-gray-300 cursor-pointer w-[18px] h-[18px] mt-[2px]"/>
 
@@ -76,9 +79,8 @@ export default function Tasks(){
                                 <MdOutlineModeEdit onClick={()=>{editTask(task)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                                 <RiDeleteBin5Fill onClick={()=>{deleteTask(task._id as string)}} className="cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                             </div>
-
                         </div>
-                    ))
+                    })
                 }
 
                 {
