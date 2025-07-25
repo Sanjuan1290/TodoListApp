@@ -1,6 +1,5 @@
-
 import { defer, Await, useLoaderData} from 'react-router-dom'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 
 type UserProfile = {
     fullName: string,
@@ -24,15 +23,51 @@ export async function loader(){
         return
     }
 
-    return defer({userProfile: result.user})
+    return defer({userProfile: result.user, token})
 
 }
 
 export default function Profile(){
-    const { userProfile } = useLoaderData() as { userProfile: Promise<UserProfile> }
+    const { userProfile, token } = useLoaderData() as { userProfile: Promise<UserProfile>, token: string }
+    const [ name, setName ] = useState('')
 
-    function editProfile(e: React.FormEvent<HTMLFormElement>){
+    const nameRef = useRef<HTMLInputElement>(null)
+    const currentPassRef = useRef<HTMLInputElement>(null)
+    const newPassRef = useRef<HTMLInputElement>(null)
+    const confirmNewPassRef = useRef<HTMLInputElement>(null)
+
+    useEffect(()=>{
+        setName(nameRef.current!.value as string)
+    }, [])
+
+    async function editProfile(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault()
+
+        const response = await fetch('http://localhost:3000/api/v1/updateProfile', {
+            method: 'PATCH',
+            headers: {
+                authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                fullName: nameRef.current!.value, 
+                currentPassword: currentPassRef.current!.value, 
+                newPassword: newPassRef.current!.value,
+                confirmNewPassword: confirmNewPassRef.current!.value
+            })
+        })
+
+        const result = await response.json()
+
+        console.log(result);
+        if(!response.ok) {
+            console.log(result.message);
+            return
+        }
+
+        currentPassRef.current!.value = '';
+        newPassRef.current!.value = '';
+        confirmNewPassRef.current!.value = '';
     }
 
     return(
@@ -45,12 +80,12 @@ export default function Profile(){
 
                             <label>
                                 <p className="text-[13px] font-bold tracking-wide">Name</p>
-                                <input type="text" value={user.fullName} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
+                                <input type="text" value={name || user.fullName} ref={nameRef} onChange={(e) => setName(e.target.value)} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
                             <label>
                                 <p className="text-[13px] font-bold tracking-wide">Email (cannot be changed)</p>
-                                <input type="text" value={user.email} disabled className="bg-[rgba(255,255,255,0.19)] border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
+                                <input type="text" autoComplete='email' value={user.email} disabled readOnly className="bg-[rgba(255,255,255,0.19)] border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
                             <div className="h-[1px] w-[100%] bg-gray-400"></div>
@@ -59,17 +94,17 @@ export default function Profile(){
 
                             <label>
                                 <p className="text-[13px] font-bold tracking-wide">Current Password</p>
-                                <input type="text" className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
+                                <input type="password" autoComplete='current-password' ref={currentPassRef} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
                             <label>
                                 <p className="text-[13px] font-bold tracking-wide">New Password</p>
-                                <input type="text" className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
+                                <input type="password" autoComplete='current-password' ref={newPassRef} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
                             <label>
                                 <p className="text-[13px] font-bold tracking-wide">Confirm New Password</p>
-                                <input type="text" className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
+                                <input type="password" autoComplete='current-password' ref={confirmNewPassRef} className="bg-transparent border border-gray-400 rounded-md px-2 py-[2px] w-[100%] max-w-[600px] min-w-[300px]" />
                             </label>
 
                             <div className="text-right">
