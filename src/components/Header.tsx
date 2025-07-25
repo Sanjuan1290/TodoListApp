@@ -20,7 +20,7 @@ export default function Header(){
 
             <div className="flex gap-5">
                 <MdOutlineLightMode className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
-                <CgProfile className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
+                <CgProfile onClick={()=>{navigate('/profile')}} className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
                 <MdLogout onClick={()=>{setShowValidation(true)}} className="w-5 h-5 cursor-pointer transition-colors duration-200 ease-in-out hover:text-gray-300"/>
             </div>
             
