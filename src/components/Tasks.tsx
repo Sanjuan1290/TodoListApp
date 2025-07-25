@@ -45,6 +45,25 @@ export default function Tasks(){
         setTask(userTask)
     }
 
+    async function toggleTask(taskId: string, currentStatus: 'Pending' | 'Completed'){
+        const token = JSON.parse(localStorage.getItem('token') || JSON.stringify(''))
+        const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending' 
+        
+        const response = await fetch('http://localhost:3000/api/v1/toggleTask', {
+            method: 'PATCH',
+            headers: {
+                authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ taskId, newStatus })
+        })
+        const result = await response.json()
+
+        console.log(result);
+
+        setTasks(result.tasks.map((task: Task) => ({ ...task,  dueDate: new Date(task.dueDate)})))
+    }
+
     return(
         <>
             <div className="flex gap-2 text-gray-700 text-[13px]">
@@ -60,7 +79,7 @@ export default function Tasks(){
 
                         return status && <div key={index} className="bg-[rgb(30,40,56)] flex gap-2 px-3 py-4 items-start rounded-md">
 
-                            <IoMdCheckmarkCircleOutline className="text-gray-300 cursor-pointer w-[18px] h-[18px] mt-[2px]"/>
+                            <IoMdCheckmarkCircleOutline onClick={()=>{toggleTask(task._id as string, task.status as 'Pending' | 'Completed')}} className={`${task.status === "Completed" ? 'text-green-600' : 'text-gray-300'} cursor-pointer w-[18px] h-[18px] mt-[2px]`}/>
 
                             <div className="flex flex-col gap-1 flex-1">
                                 <p className="text-gray-100 font-bold">{task.title}</p>
